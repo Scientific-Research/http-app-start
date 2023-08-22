@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 
+const apiEndpoint = 'https://jsonplaceholder.typicode.com/posts';
+
 class App extends Component {
 	state = {
 		posts: [],
@@ -10,9 +12,7 @@ class App extends Component {
 	async componentDidMount() {
 		//pending > resolved (success) OR rejected (failure)
 		// const promise = axios.get('https://jsonplaceholder.typicode.com/posts');
-		const { data: posts } = await axios.get(
-			'https://jsonplaceholder.typicode.com/posts'
-		);
+		const { data: posts } = await axios.get(apiEndpoint);
 
 		// console.log(promise);
 		// const response = await promise;
@@ -21,8 +21,13 @@ class App extends Component {
 		console.log('posts in state(after this.setState): ', posts);
 	}
 
-	handleAdd = () => {
-		console.log('Add');
+	handleAdd = async () => {
+		// console.log('Add');
+		const obj = { title: 'a', body: 'b' };
+		const { data: post } = await axios.post(apiEndpoint, obj);
+		console.log(post);
+		const addedPosts = [post, ...this.state.posts];
+		this.setState({ posts: addedPosts });
 	};
 
 	handleUpdate = (post) => {
