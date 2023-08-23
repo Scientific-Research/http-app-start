@@ -37,15 +37,33 @@ class App extends Component {
 		// console.log(data);
 		// axios.patch(apiEndpoint + '/' + post.id, { title: post.title });
 		await axios.put(apiEndpoint + '/' + post.id, post);
-		const postsClone = [...this.state.posts];
-		const index = postsClone.indexOf(post);
+		const postsUpdate = [...this.state.posts];
+		const index = postsUpdate.indexOf(post);
 		// postsClone[index] = { ...post };
-		postsClone[index] = post;
-		this.setState({ posts: postsClone });
+		postsUpdate[index] = { ...post };
+		this.setState({ posts: postsUpdate });
 	};
 
-	handleDelete = (post) => {
-		console.log('Delete', post);
+	// handleDelete = async (post) => {
+	// 	const originalPosts = this.state.posts;
+
+	// 	const posts = this.state.posts.filter((p) => p.id !== post.id);
+	// 	this.setState({ posts });
+	// };
+
+	handleDelete = async (post) => {
+		// console.log('Delete', post);
+		const originalPosts = this.state.posts;
+
+		const deletedPost = this.state.posts.filter((p) => p.id !== post.id);
+		this.setState({ posts: deletedPost });
+
+		try {
+			await axios.delete(apiEndpoint, +'/' + post.id);
+		} catch (err) {
+			alert('Something failed while deleting a post');
+			this.setState({ posts: originalPosts });
+		}
 	};
 
 	render() {
