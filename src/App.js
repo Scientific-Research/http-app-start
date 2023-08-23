@@ -63,7 +63,7 @@ class App extends Component {
 
 		try {
 			// await http.delete('s' + config.apiEndpoint, +'/' + post.id);
-			await http.delete(config.apiEndpoint, +'/' + post.id);
+			await http.delete('ssdjfklsd' + config.apiEndpoint, +'/' + post.id);
 		} catch (ex) {
 			// console.log('HANDLE DELETE CATCH BLOCK');
 			if (ex.response && ex.response.status === 404) {
