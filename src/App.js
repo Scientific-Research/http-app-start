@@ -1,21 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import http from './services/httpService';
 import './App.css';
 
-axios.interceptors.response.use(null, (error) => {
-	const expectedError =
-		error.response &&
-		error.response.status >= 400 &&
-		error.response.status < 500;
-	// console.log('intercepter called!');
-
-	if (!expectedError) {
-		console.log('Logging the error', error);
-		alert('An unexpected error occurred!');
-	}
-
-	return Promise.reject(error);
-});
 const apiEndpoint = 'https://jsonplaceholder.typicode.com/posts';
 
 class App extends Component {
@@ -26,7 +12,7 @@ class App extends Component {
 	async componentDidMount() {
 		//pending > resolved (success) OR rejected (failure)
 		// const promise = axios.get('https://jsonplaceholder.typicode.com/posts');
-		const { data: posts } = await axios.get(apiEndpoint);
+		const { data: posts } = await http.get(apiEndpoint);
 
 		// console.log(promise);
 		// const response = await promise;
@@ -38,7 +24,7 @@ class App extends Component {
 	handleAdd = async () => {
 		// console.log('Add');
 		const obj = { title: 'a', body: 'b' };
-		const { data: post } = await axios.post(apiEndpoint, obj);
+		const { data: post } = await http.post(apiEndpoint, obj);
 		console.log(post);
 		const addedPosts = [post, ...this.state.posts];
 		this.setState({ posts: addedPosts });
@@ -50,7 +36,7 @@ class App extends Component {
 		// const { data } = await axios.put(apiEndpoint + '/' + post.id, post);
 		// console.log(data);
 		// axios.patch(apiEndpoint + '/' + post.id, { title: post.title });
-		await axios.put(apiEndpoint + '/' + post.id, post);
+		await http.put(apiEndpoint + '/' + post.id, post);
 		const postsUpdate = [...this.state.posts];
 		const index = postsUpdate.indexOf(post);
 		// postsClone[index] = { ...post };
@@ -73,7 +59,7 @@ class App extends Component {
 		this.setState({ posts: deletedPost });
 
 		try {
-			await axios.delete(apiEndpoint, +'/' + post.id);
+			await http.delete(apiEndpoint, +'/' + post.id);
 		} catch (ex) {
 			// console.log('HANDLE DELETE CATCH BLOCK');
 			if (ex.response && ex.response.status === 404) {
